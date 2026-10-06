@@ -9,7 +9,6 @@ const PHASES = [
 const CHIMES = {
   rest: [659.25, 523.25],
   start: [523.25, 659.25, 783.99],
-  done: [523.25, 659.25, 783.99, 1046.5],
 };
 
 const SETTINGS_KEY = "segue.settings";
@@ -246,8 +245,8 @@ function stopSession() {
 }
 
 function finish() {
+  // No chime here on purpose: by the end of start up someone may be in flow, so we finish silently.
   stopSession();
-  chime("done");
   $("#done-note").textContent = settings.task
     ? `Keep going from “${settings.task}”.`
     : "Carry on with the next thing.";

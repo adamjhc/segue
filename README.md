@@ -24,7 +24,7 @@ Then open http://localhost:4173.
 
 - Settings and any running session are saved to `localStorage`, so a reload picks up where you left off.
 - The timer works from end timestamps, so it stays accurate when the tab is in the background.
-- A soft chime (Web Audio, no files) plays between phases. It can be turned off.
+- A soft chime (Web Audio, no files) plays as rest and start up begin. It can be turned off. There is deliberately no chime when start up ends, so nobody who has got into the flow is interrupted.
 - The screen is kept awake during a session where the Wake Lock API is supported.
 - Press Space to pause or resume.
 
