@@ -8,7 +8,7 @@ It runs three phases back to back:
 2. **Rest**: a pause with nothing to do.
 3. **Start up**: one small step into what's next.
 
-Each phase defaults to 5 minutes and can be set from 1 to 60. You can name the small first step and it will show during start up.
+Each phase defaults to 5 minutes and can be set from 1 to 60. You can say what you're moving on to, and start up will suggest a two-minute first step for it.
 
 ## Running locally
 
@@ -19,6 +19,12 @@ python3 -m http.server 4173
 ```
 
 Then open http://localhost:4173.
+
+## First steps
+
+Suggestions come from templates in `steps.js`, with no server or AI involved. The task is matched to one of 15 kinds of task (email, calls, writing, cleaning and so on) by keyword, with a catch-all for anything else. Each kind has 20 steps (the catch-all has 40). Steps are drawn from a shuffled bag that's remembered in `localStorage`, so every step in a pool is shown before any repeats. "Another idea" draws the next one.
+
+To add steps, add lines to a category's `steps` list. To add a kind of task, add a category above `general`; the first category whose pattern matches wins.
 
 ## Notes
 

@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..700&display=swap">
   <link rel="stylesheet" href="styles.css">
+  <script src="steps.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body data-view="setup" data-phase="none">
@@ -65,8 +66,9 @@
 
       <div class="extras">
         <label class="task">
-          <span>Your small first step</span>
-          <input id="task" type="text" maxlength="80" placeholder="e.g. Open the report" autocomplete="off">
+          <span>What are you moving on to?</span>
+          <input id="task" type="text" maxlength="80" placeholder="e.g. Write the quarterly report" autocomplete="off" aria-describedby="task-help">
+          <small id="task-help">You'll get a two-minute first step for it.</small>
         </label>
         <label class="toggle">
           <input id="sound" type="checkbox" checked>
@@ -89,7 +91,13 @@
           <p id="time" class="time" role="timer">5:00</p>
         </div>
       </div>
-      <p id="hint" class="hint"></p>
+      <div class="hint">
+        <p id="hint"></p>
+        <div class="step-extras" hidden>
+          <p id="for-task" class="for-task"></p>
+          <button id="another" type="button" class="quiet small">Another idea</button>
+        </div>
+      </div>
 
       <div class="track" aria-hidden="true">
         <div class="seg" data-phase="wind"><span class="bar"><i></i></span><span class="seg-label">Wind down</span></div>

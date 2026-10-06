@@ -3,7 +3,7 @@
 const PHASES = [
   { id: "wind", name: "Wind down", hint: "Wrap up what you're doing. Save your place, jot a note, put things down." },
   { id: "rest", name: "Rest", hint: "Nothing to do now. Breathe, stretch, look out of a window." },
-  { id: "start", name: "Start up", hint: "Make one small start on the next thing." },
+  { id: "start", name: "Start up" }, // Its hint is the suggested first step
 ];
 
 const CHIMES = {
@@ -126,6 +126,8 @@ function begin() {
     phase: 0,
     endsAt: Date.now() + settings.minutes[0] * 60_000,
     remaining: null,
+    task: settings.task,
+    step: suggestStep(settings.task),
   };
   save(SESSION_KEY, session);
   startSession();
@@ -146,7 +148,11 @@ function enterPhase() {
   const phase = PHASES[session.phase];
   document.body.dataset.phase = phase.id;
   $("#phase-name").textContent = phase.name;
-  $("#hint").textContent = phase.id === "start" && settings.task ? settings.task : phase.hint;
+  const starting = phase.id === "start";
+  $("#hint").textContent = starting ? session.step : phase.hint;
+  $(".step-extras").hidden = !starting;
+  $("#for-task").textContent = session.task ? `To get going with “${session.task}”` : "";
+  $("#for-task").hidden = !session.task;
   $$(".seg").forEach((seg, i) => {
     if (i === session.phase) seg.setAttribute("aria-current", "step");
     else seg.removeAttribute("aria-current");
@@ -172,7 +178,7 @@ function update() {
     save(SESSION_KEY, session);
     enterPhase();
     chime(PHASES[session.phase].id);
-    announce(`${PHASES[session.phase].name}. ${session.minutes[session.phase]} minutes.`);
+    announce(`${PHASES[session.phase].name}. ${session.minutes[session.phase]} minutes. ${$("#hint").textContent}`);
   }
 
   render(remaining);
@@ -232,8 +238,16 @@ function skip() {
   else session.remaining = phaseMs(session.phase);
   save(SESSION_KEY, session);
   enterPhase();
-  announce(`${PHASES[session.phase].name}.`);
+  announce(`${PHASES[session.phase].name}. ${$("#hint").textContent}`);
   update();
+}
+
+function anotherStep() {
+  if (!session) return;
+  session.step = suggestStep(session.task, session.step);
+  save(SESSION_KEY, session);
+  $("#hint").textContent = session.step;
+  announce(session.step);
 }
 
 function stopSession() {
@@ -246,10 +260,9 @@ function stopSession() {
 
 function finish() {
   // No chime here on purpose: by the end of start up someone may be in flow, so we finish silently.
+  const task = session.task;
   stopSession();
-  $("#done-note").textContent = settings.task
-    ? `Keep going from “${settings.task}”.`
-    : "Carry on with the next thing.";
+  $("#done-note").textContent = task ? `Keep going with “${task}”.` : "Carry on with the next thing.";
   show("done");
   focusHeading("done");
 }
@@ -262,6 +275,7 @@ function end() {
 
 $("#pause").addEventListener("click", togglePause);
 $("#skip").addEventListener("click", skip);
+$("#another").addEventListener("click", anotherStep);
 $("#end").addEventListener("click", end);
 $("#again").addEventListener("click", () => {
   show("setup");
@@ -339,6 +353,7 @@ document.addEventListener("visibilitychange", () => {
 renderSetup();
 
 if (session && Array.isArray(session.minutes) && PHASES[session.phase]) {
+  session.step ??= suggestStep(session.task);
   startSession();
 } else {
   session = null;
