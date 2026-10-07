@@ -106,7 +106,7 @@ main {
   width: 100%;
   max-width: 64rem;
   margin: 0 auto;
-  padding: clamp(1.5rem, 5vh, 3rem) clamp(1.25rem, 5vw, 3rem) max(2rem, env(safe-area-inset-bottom));
+  padding: clamp(1rem, 4svh, 3rem) clamp(1.25rem, 5vw, 3rem) max(clamp(1rem, 3svh, 2rem), env(safe-area-inset-bottom));
 }
 
 /* Buttons */
@@ -138,11 +138,11 @@ main {
 
 .setup h1 {
   max-width: 16ch;
-  font-size: clamp(2rem, 1.4rem + 3vw, 3.25rem);
+  font-size: clamp(1.75rem, 1.2rem + 3vw, 3.25rem);
   font-weight: 600;
   line-height: 1.08;
   letter-spacing: -.03em;
-  margin-bottom: clamp(1.75rem, 5vh, 3rem);
+  margin-bottom: clamp(1rem, 4svh, 3rem);
 }
 
 .phases {
@@ -150,29 +150,26 @@ main {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 1rem;
+  gap: .75rem;
 }
 
+/* On phones each phase is one compact row; descriptions only show on wider screens */
 .phase {
   display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-areas:
-    "pebble text"
-    "pebble stepper";
-  column-gap: 1rem;
-  row-gap: .5rem;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "pebble text stepper";
+  column-gap: .75rem;
   align-items: center;
 }
 
 .phase-text { grid-area: text; }
-.phase h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -.01em; }
-.phase p { color: var(--ink-soft); font-size: .9375rem; }
+.phase h2 { font-size: 1.125rem; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
+.phase p { display: none; color: var(--ink-soft); font-size: .9375rem; }
 
 /* Each phase has its own shape, echoed by the timer blob */
 .pebble {
   grid-area: pebble;
-  align-self: start;
-  width: 3.75rem;
+  width: 2.5rem;
   aspect-ratio: 1;
 }
 .phase[data-phase="wind"] .pebble {
@@ -241,8 +238,8 @@ main {
 
 .extras {
   display: grid;
-  gap: 1.25rem;
-  margin-top: clamp(1.75rem, 5vh, 2.75rem);
+  gap: clamp(.75rem, 2.5svh, 1.25rem);
+  margin-top: clamp(1.25rem, 4svh, 2.75rem);
 }
 
 .task {
@@ -256,7 +253,7 @@ main {
   width: 100%;
   border: 2px solid transparent;
   border-radius: 1rem;
-  padding: .8rem 1rem;
+  padding: .7rem 1rem;
   background: #fff;
   font-weight: 400;
   transition: border-color .2s;
@@ -318,7 +315,7 @@ main {
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem 1.25rem;
-  margin-top: clamp(1.75rem, 5vh, 2.75rem);
+  margin-top: clamp(1.25rem, 4svh, 2.75rem);
 }
 
 .begin .primary {
@@ -348,8 +345,9 @@ main {
     align-items: start;
   }
 
-  .pebble { width: 5.5rem; }
-  .phase h2 { font-size: 1.375rem; }
+  .phase p { display: block; }
+  .pebble { width: 5.5rem; align-self: start; }
+  .phase h2 { font-size: 1.375rem; white-space: normal; }
   .stepper { align-self: end; }
 }
 
@@ -367,7 +365,7 @@ main {
   position: relative;
   display: grid;
   place-items: center;
-  width: min(74vw, 46vh, 23rem);
+  width: min(74vw, 36svh, 23rem);
   aspect-ratio: 1;
   overflow: hidden;
   background: var(--tone-soft);
@@ -455,9 +453,10 @@ body[data-paused="true"] .time { animation: blink 2s ease-in-out infinite; }
 .hint {
   display: grid;
   justify-items: center;
-  gap: .75rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(.5rem, 1.5svh, .75rem);
   max-width: 30ch;
-  margin-top: clamp(1.25rem, 4vh, 2rem);
+  margin-top: clamp(.75rem, 3svh, 2rem);
 }
 
 #hint {
@@ -485,6 +484,17 @@ body[data-phase="start"] #hint {
   font-size: .9375rem;
 }
 
+/* Keep the task to one line on phones so the timer screen fits */
+@media (max-width: 45.99rem) {
+  .step-extras { grid-template-columns: minmax(0, 1fr); width: 100%; }
+  .for-task {
+    justify-self: stretch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 .quiet.small {
   padding: .5rem 1rem;
   font-size: .9375rem;
@@ -494,7 +504,7 @@ body[data-phase="start"] #hint {
   display: flex;
   gap: .5rem;
   width: min(100%, 26rem);
-  margin-top: clamp(1.25rem, 4vh, 2.25rem);
+  margin-top: clamp(1rem, 3svh, 2.25rem);
 }
 
 .seg {
@@ -540,7 +550,7 @@ body[data-phase="start"] #hint {
   flex-wrap: wrap;
   justify-content: center;
   gap: .75rem;
-  margin-top: clamp(1.5rem, 5vh, 2.75rem);
+  margin-top: clamp(1rem, 4svh, 2.75rem);
 }
 
 .controls .primary { min-width: 7.5rem; }
