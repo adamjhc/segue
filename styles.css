@@ -314,6 +314,7 @@ main {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem 1.25rem;
   margin-top: clamp(1.25rem, 4svh, 2.75rem);
 }
