@@ -2,15 +2,17 @@
 
 // Two-minute first steps, grouped by the kind of task someone is moving on to.
 // Categories are checked in order and the first match wins, so more specific
-// ones (email, meetings) come before broad ones (writing, study).
+// ones (email, meetings) come before broad ones (writing, study). A category's
+// optional `exclude` pattern stops look-alike matches, like "birthday present"
+// for meetings or "school run" for exercise.
 // Steps never mention the task itself, so they read naturally for any wording.
 
 const STEP_CATEGORIES = [
   {
     id: "email",
-    match: /\b(e-?mails?|inbox|repl(y|ies|ying)|respond|messages?|texts?|whatsapp|slack|dms?|write back|get back to)\b/,
+    match: /\b(e-?mails?|inbox|outlook|gmail)\b/,
     steps: [
-      "Open your inbox and find the one message you need to answer.",
+      "Open your inbox and find the one email you need to answer.",
       "Open a new draft and type just the greeting.",
       "Write the subject line, nothing else yet.",
       "Type the first sentence of your reply, even if it's clumsy.",
@@ -22,7 +24,7 @@ const STEP_CATEGORIES = [
       "Read the message you're replying to once, slowly.",
       "Write the sign-off first, then go back up to the top.",
       "Mute notifications for the next half hour.",
-      "Archive three messages you don't need, to warm up.",
+      "Archive three emails you don't need, to warm up.",
       "Say out loud what you want the reply to say, in one sentence.",
       "Search for the person's name to bring up the thread.",
       "Write the reply as if it were a quick text. You can tidy it later.",
@@ -33,8 +35,35 @@ const STEP_CATEGORIES = [
     ],
   },
   {
+    id: "messages",
+    match: /\b(repl(y|ies|ying)|respond|messages?|texts?|whatsapp|slack|teams|discord|dms?|group chat|linkedin|write back|get back to)\b/,
+    steps: [
+      "Open the chat and read the last message.",
+      "Type one line back. It doesn't need to be perfect.",
+      "Send a quick “Got this, I'll reply properly soon”.",
+      "Mute every chat except this one for now.",
+      "Reply with a voice note instead of typing.",
+      "Write what you want to say in your notes app first.",
+      "Open the oldest message that's waiting for a reply.",
+      "React with an emoji now, then write a proper reply.",
+      "Answer just the first question they asked.",
+      "Read their message out loud to yourself.",
+      "Mark everything you don't need to answer as read.",
+      "Sit somewhere comfy with your phone.",
+      "Start with “Hey!” and keep typing.",
+      "Scroll up to remember where the conversation got to.",
+      "Count the chats that need a reply, then pick the easiest.",
+      "Pin the chat so it's at the top.",
+      "Write one sentence about how you're doing.",
+      "Copy any details you'll need, like a date or address.",
+      "Turn off notifications from other apps while you reply.",
+      "Type your reply, read it once, and press send.",
+    ],
+  },
+  {
     id: "meeting",
-    match: /\b(meetings?|presentations?|present(ing)?|slides?|deck|interviews?|stand-?up|pitch|zoom|teams call|webinar|workshop|1:1|one-to-one|agenda|speech)\b/,
+    match: /\b(meetings?|presentations?|present(ing)?|slides?|deck|interviews?|stand-?up|retro(spective)?|sprint planning|pitch|zoom|teams call|webinar|workshop|1:1s?|one-to-ones?|parents'? evening|agenda|speech)\b/,
+    exclude: /\b(write|writing|write up|minutes|gifts?|presents|(a|birthday|christmas) present|present for)\b/,
     steps: [
       "Open the invite and read the agenda.",
       "Write the one thing you want to get out of it.",
@@ -60,7 +89,8 @@ const STEP_CATEGORIES = [
   },
   {
     id: "call",
-    match: /\b(call|calls|calling|phone|ring|dial|voicemail|appointments?|booking|book (a|an|in)|haircut|gp|dentist|doctors?)\b/,
+    match: /\b(call|calls|calling|phone|ring|dial|voicemail|facetime|video call|skype|appointments?|booking|book (a|an|in)|haircut|gp|dentist|doctors?)\b/,
+    exclude: /\b(complain(t)?|new phone|phone (charger|case|bill|screen|contract))\b/,
     steps: [
       "Find the number and put it into your phone.",
       "Write down the one thing you need from this call.",
@@ -68,25 +98,25 @@ const STEP_CATEGORIES = [
       "Put a pen and paper next to your phone.",
       "Write the first sentence you'll say when they answer.",
       "Find a quiet spot and sit down with your phone.",
-      "Check their opening hours.",
-      "Get any reference number or account details in front of you.",
+      "Check it's a good time, or send a quick text first.",
+      "Get anything you'll need to mention in front of you.",
       "Pour a glass of water to have during the call.",
       "Say your opening line out loud once.",
       "Check your phone is charged, or plug it in.",
       "Write their name at the top of a note.",
       "Jot down two questions you want to ask.",
-      "Open the page or email with their contact details.",
+      "Put your phone on speaker or find your headphones.",
       "Write down when you're free over the next week.",
       "Press call. You only have to say hello.",
       "Close the door or move somewhere you can hear well.",
       "Write what you'll say if you get voicemail.",
-      "Note the time you're calling, so you have a record.",
+      "Take three slow breaths, then dial.",
       "Stand up, stretch, then pick up your phone.",
     ],
   },
   {
     id: "code",
-    match: /\b(code|coding|program(ming)?|debug(ging)?|bugs?|refactor(ing)?|deploy(ing)?|commit|pull request|pr|repo|github|implement(ing)?|features?|functions?|api|script|compile|unit tests?|python|javascript|typescript|rust|sql)\b/,
+    match: /\b(code|coding|program(ming)?|debug(ging)?|bugs?|refactor(ing)?|deploy(ing)?|hotfix|commit|merge|pull request|pr|repo|github|(the|broken|failing|ci) build|ci|pipeline|implement(ing)?|features?|functions?|api|script|compile|unit tests?|(failing|broken|flaky) tests?|python|javascript|typescript|rust|sql)\b/,
     steps: [
       "Open the project and run it once.",
       "Run the tests and read the first failure.",
@@ -112,7 +142,8 @@ const STEP_CATEGORIES = [
   },
   {
     id: "creative",
-    match: /\b(draw(ing)?|paint(ing)?|sketch(ing)?|design(ing)?|music|songs?|guitar|piano|drums?|violin|cello|ukulele|instrument|compos(e|ing|ition)|craft(ing)?|knit(ting)?|sew(ing)?|crochet|photo(s|graphy)?|video|film|animat(e|ion)|illustrat(e|ion)|pottery|sing(ing)?)\b/,
+    match: /\b(draw(ing)?|paint(ing)?|sketch(ing)?|design(ing)?|music|songs?|guitar|piano|drums?|violin|cello|ukulele|instrument|compos(e|ing|ition)|craft(ing)?|knit(ting)?|sew(ing)?|crochet|photo(s|graphy)?|video|film|animat(e|ion)|illustrat(e|ion)|pottery|sing(ing)?|podcast|youtube|vlog)\b/,
+    exclude: /\b(yoga|pilates|workout|exercise|lecture|watch)\b/,
     steps: [
       "Lay out your materials.",
       "Draw one line. Any line.",
@@ -138,7 +169,7 @@ const STEP_CATEGORIES = [
   },
   {
     id: "admin",
-    match: /\b(pay(ing)?|bills?|tax(es)?|budget(ing)?|invoices?|expenses?|forms?|paperwork|apply|application|renew(al)?|bank(ing)?|accounts?|admin|insurance|receipts?|mortgage|rent|pension|council|passport|visa|contracts?|claims?|refund|finances?|benefits)\b/,
+    match: /\b(pay(ing)?|bills?|tax(es)?|budget(ing)?|invoices?|expenses?|forms?|paperwork|apply|application|renew(al)?|bank(ing)?|accounts?|admin|insurance|receipts?|mortgage|rent|pension|council|passport|visa|contracts?|claims?|refund|finances?|benefits|spreadsheets?|timesheets?|membership|subscription|direct debit|energy|supplier|broadband|complain(t)?|(sort|open|go|check)( through)?( the| my)? (post|mail))\b/,
     steps: [
       "Find the letter or email about it.",
       "Open your banking app.",
@@ -164,7 +195,8 @@ const STEP_CATEGORIES = [
   },
   {
     id: "errands",
-    match: /\b(shop(ping)?|groceries|grocery|supermarket|buy|order|errands?|pick up|collect|post office|parcels?|returns?|pharmacy|prescription|chemist)\b/,
+    match: /\b(shop(ping)?|groceries|grocery|supermarket|buy|order|errands?|pick up|collect|drop(ping)? off|post office|parcels?|returns?|pharmacy|prescription|chemist|library|presents?|gifts?|petrol|fuel|fill up)\b/,
+    exclude: /\b(put( the)? (shopping|groceries) away|unpack|kids|children)\b/,
     steps: [
       "Write the first three things on your list.",
       "Find your bags and put them by the door.",
@@ -190,7 +222,7 @@ const STEP_CATEGORIES = [
   },
   {
     id: "planning",
-    match: /\b(plan(ning)?|to-?dos?|schedule|prioriti[sz]e|calendar|diary|organi[sz]e (my|the) (day|week|time)|week ahead|goals?)\b/,
+    match: /\b(plan(ning)?|to-?dos?|schedule|prioriti[sz]e|calendar|diary|organi[sz]e (my|the) (day|week|time)|what to do|week ahead|start (my|the) day|goals?)\b/,
     steps: [
       "Write down everything on your mind, as a list.",
       "Open your calendar and look at today.",
@@ -216,7 +248,7 @@ const STEP_CATEGORIES = [
   },
   {
     id: "study",
-    match: /\b(study(ing)?|revis(e|ing|ion)|homework|exams?|tests?|quiz|read(ing)?|books?|learn(ing)?|course|lectures?|class(es)?|flashcards?|research|assignments?|coursework|lessons?|tutorials?|textbook|practi[cs](e|ing))\b/,
+    match: /\b(study(ing)?|revis(e|ing|ion)|homework|exams?|tests?|past papers|quiz|read(ing)?|(a|my|the|this|that) book|books|learn(ing)?|course|lectures?|class(es)?|flashcards?|make notes|take notes|notes on|research|assignments?|coursework|lessons?|tutorials?|textbook|practi[cs](e|ing))\b/,
     steps: [
       "Open the book or notes to the right page.",
       "Read one paragraph and underline one thing.",
@@ -242,7 +274,7 @@ const STEP_CATEGORIES = [
   },
   {
     id: "writing",
-    match: /\b(write|writing|draft(ing)?|essays?|reports?|blog|articles?|docs?|documents?|proposals?|letters?|story|stories|thesis|dissertation|paper|post|newsletter|chapters?|edit(ing)?|proofread(ing)?|journal)\b/,
+    match: /\b(write|writing|draft(ing)?|essays?|reports?|blog|articles?|docs?|documents?|proposals?|letters?|story|stories|novel|poems?|poetry|screenplay|thesis|dissertation|paper|post|newsletter|chapters?|edit(ing)?|proofread(ing)?|journal|cv|résumé|resume|cover letter|personal statement)\b/,
     steps: [
       "Open the document and put your cursor where you'll start.",
       "Write one messy sentence. It's allowed to be bad.",
@@ -268,7 +300,8 @@ const STEP_CATEGORIES = [
   },
   {
     id: "cooking",
-    match: /\b(cook(ing)?|bake|baking|dinner|lunch|breakfast|supper|meals?|meal prep|recipe|food)\b/,
+    match: /\b(cook(ing)?|bake|baking|dinner|lunch(es)?|packed lunch(es)?|breakfast|supper|meals?|meal prep|recipe|food|eat|eating|snack|smoothie|sandwich|defrost|pasta|spaghetti|soup|curry|stir[- ]fry|salad|pizza|roast|risotto|porridge|pancakes|omelette|cake|bread|biscuits|cookies)\b/,
+    exclude: /\b(freezer)\b/,
     steps: [
       "Wash your hands and roll up your sleeves.",
       "Get the pan out and put it on the hob.",
@@ -294,7 +327,7 @@ const STEP_CATEGORIES = [
   },
   {
     id: "cleaning",
-    match: /\b(clean(ing)?|tidy(ing)?|wash(ing)?|dishes|laundry|vacuum(ing)?|hoover(ing)?|declutter(ing)?|organi[sz]e|sort|mop(ping)?|dust(ing)?|bins?|rubbish|trash|recycling|bedroom|kitchen|bathroom|fold(ing)?|put away|iron(ing)?|chores?|make (the|my) bed)\b/,
+    match: /\b(clean(ing)?|tidy(ing)?|wash(ing)?|dishes|dishwasher|laundry|vacuum(ing)?|hoover(ing)?|declutter(ing)?|clear out|organi[sz]e|sort|scrub(bing)?|mop(ping)?|dust(ing)?|wipe|bins?|rubbish|trash|recycling|bedroom|kitchen|bathroom|oven|wardrobe|desk|fold(ing)?|put( the \w+)? away|unpack(ing)?|freezer|fridge|iron(ing)?|chores?|sheets|bedding|strip the beds?|change (the|my) bed|make (the|my) bed)\b/,
     steps: [
       "Put on music you like.",
       "Pick up five things and put them where they belong.",
@@ -320,7 +353,8 @@ const STEP_CATEGORIES = [
   },
   {
     id: "exercise",
-    match: /\b(exercise|work ?out|gym|run(ning)?|jog(ging)?|walk(ing)?|yoga|pilates|stretch(ing)?|swim(ming)?|cycl(e|ing)|bike|training|lift(ing)?|weights|sports?|football|tennis|climb(ing)?|danc(e|ing)|physio)\b/,
+    match: /\b(exercise|work ?out|gym|run(ning)?|jog(ging)?|walk(ing)?|yoga|pilates|stretch(es|ing)?|swim(ming)?|cycl(e|ing)|bike|training|lift(ing)?|weights|sports?|football|tennis|climb(ing)?|danc(e|ing)|physio)\b/,
+    exclude: /\b(school run|membership|pack|work out (what|how|which|when|why|if))\b/,
     steps: [
       "Put on your trainers.",
       "Change into your workout clothes.",
@@ -372,7 +406,7 @@ const STEP_CATEGORIES = [
   },
   {
     id: "ready",
-    match: /\b(get(ting)? ready|shower|bath|dress(ed)?|leave|leaving|go out|head out|commute|pack(ing)?|school run|go to (work|school|uni|the office)|get up|morning routine)\b/,
+    match: /\b(ready|shower|bath|dress(ed)?|leave|leaving|go out|head out|commute|pack(ing)?|school run|pick (up )?the (kids|children)|go to (work|school|uni|the office)|get up|morning routine)\b/,
     steps: [
       "Put your shoes by the door.",
       "Get your clothes out.",
@@ -449,7 +483,7 @@ const STEP_HISTORY_KEY = "segue.steps";
 function stepCategory(task) {
   const text = (task ?? "").toLowerCase();
   if (!text.trim()) return STEP_CATEGORIES.at(-1);
-  return STEP_CATEGORIES.find((category) => category.match.test(text));
+  return STEP_CATEGORIES.find((category) => category.match.test(text) && !category.exclude?.test(text));
 }
 
 // Steps are drawn from a shuffled bag per category: every step is shown once

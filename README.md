@@ -22,9 +22,11 @@ Then open http://localhost:4173.
 
 ## First steps
 
-Suggestions come from templates in `steps.js`, with no server or AI involved. The task is matched to one of 15 kinds of task (email, calls, writing, cleaning and so on) by keyword, with a catch-all for anything else. Each kind has 20 steps (the catch-all has 40). Steps are drawn from a shuffled bag that's remembered in `localStorage`, so every step in a pool is shown before any repeats. "Another idea" draws the next one.
+Suggestions come from templates in `steps.js`, with no server or AI involved. The task is matched to one of 16 kinds of task (email, messages, calls, writing, cleaning and so on) by keyword, with a catch-all for anything else. Each kind has 20 steps (the catch-all has 40). Steps are drawn from a shuffled bag that's remembered in `localStorage`, so every step in a pool is shown before any repeats. "Another idea" draws the next one.
 
-To add steps, add lines to a category's `steps` list. To add a kind of task, add a category above `general`; the first category whose pattern matches wins.
+To add steps, add lines to a category's `steps` list. To add a kind of task, add a category above `general`; the first category whose `match` pattern hits (and whose `exclude` pattern doesn't) wins.
+
+`node tests/step-matching.mjs` checks about 200 realistic tasks against the group they should get, and that every pool cycles without repeats. Run it after changing patterns.
 
 ## Notes
 
