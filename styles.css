@@ -20,6 +20,7 @@
 
   --font: "Bricolage Grotesque", ui-rounded, system-ui, sans-serif;
   --ease-soft: cubic-bezier(.4, 0, .2, 1);
+  --form-width: 28rem; /* The task field and the Begin row line up to this */
 }
 
 body[data-phase="wind"]  { --wash: var(--wind-wash);  --tone: var(--wind);  --tone-soft: var(--wind-soft); }
@@ -245,7 +246,7 @@ main {
 .task {
   display: grid;
   gap: .4rem;
-  max-width: 28rem;
+  max-width: var(--form-width);
   font-weight: 600;
 }
 
@@ -316,6 +317,7 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 1rem 1.25rem;
+  max-width: var(--form-width);
   margin-top: clamp(1.25rem, 4svh, 2.75rem);
 }
 
