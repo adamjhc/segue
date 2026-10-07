@@ -59,6 +59,7 @@ let ticker = null;
 function show(view) {
   for (const section of $$(".view")) section.hidden = section.id !== view;
   document.body.dataset.view = view;
+  if (view === "setup") randomiseTaskExample();
   if (view !== "session") {
     document.body.dataset.phase = "none";
     document.body.dataset.paused = "false";
@@ -72,7 +73,41 @@ function focusHeading(view) {
 
 /* Setup */
 
+// Everyday examples for the task field, so it doesn't read as a work-only tool.
+const TASK_EXAMPLES = [
+  "Do the washing up",
+  "Ring Grandma",
+  "Walk the dog",
+  "Practise guitar",
+  "Make dinner",
+  "Reply to Jo's text",
+  "Start my homework",
+  "Tidy my room",
+  "Go for a run",
+  "Pay the gas bill",
+  "Get ready for bed",
+  "Fold the laundry",
+  "Read a chapter of my book",
+  "Book a haircut",
+  "Write in my journal",
+  "Plan the week",
+  "Bake some bread",
+  "Take the bins out",
+  "Do some drawing",
+  "Pack for the weekend",
+  "Revise for my exam",
+  "Hoover the stairs",
+  "Answer my emails",
+  "Finish the slides",
+];
+
+function randomiseTaskExample() {
+  const example = TASK_EXAMPLES[Math.floor(Math.random() * TASK_EXAMPLES.length)];
+  $("#task").placeholder = `e.g. ${example}`;
+}
+
 function renderSetup() {
+  randomiseTaskExample();
   $$(".phase").forEach((item, i) => {
     $("input", item).value = settings.minutes[i];
   });
